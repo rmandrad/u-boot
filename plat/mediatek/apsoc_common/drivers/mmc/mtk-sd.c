@@ -174,7 +174,7 @@
  * greater than 25MHz
  */
 #define INIT_CLK_FREQ			1000000
-#define DEFAULT_CLK_FREQ		25000000
+#define DEFAULT_CLK_FREQ		MMC_BOOT_CLK_RATE
 
 #define CMD_INTS_MASK	\
 	(MSDC_INT_CMDRDY | MSDC_INT_RSPCRCERR | MSDC_INT_CMDTMO)
@@ -974,10 +974,10 @@ static const struct mmc_ops mtk_mmc_ops = {
 	.card_busy = msdc_card_busy,
 };
 
-void mtk_mmc_init(uintptr_t reg_base,  uintptr_t top_reg_base,
-		  const struct msdc_compatible *compat,
-		  uint32_t src_clk, enum mmc_device_type type,
-		  uint32_t bus_width)
+int mtk_mmc_init(uintptr_t reg_base, uintptr_t top_reg_base,
+		 const struct msdc_compatible *compat,
+		 uint32_t src_clk, enum mmc_device_type type,
+		 uint32_t bus_width)
 {
 	struct msdc_host *host = &_host;
 
@@ -991,8 +991,8 @@ void mtk_mmc_init(uintptr_t reg_base,  uintptr_t top_reg_base,
 
 	mtk_mmc_device_info.mmc_dev_type = type;
 
-	mmc_init(&mtk_mmc_ops, DEFAULT_CLK_FREQ, bus_width, 0,
-		 &mtk_mmc_device_info);
+	return mmc_init(&mtk_mmc_ops, DEFAULT_CLK_FREQ, bus_width, 0,
+			&mtk_mmc_device_info);
 }
 
 uint64_t mtk_mmc_device_size(void)

@@ -79,13 +79,16 @@ static const struct mt7622_msdc_conf {
 int mtk_plat_mmc_setup(uint32_t *num_sectors)
 {
 	const struct mt7622_msdc_conf *conf = &mt7622_msdc[MSDC_INDEX];
+	int ret;
 	uint32_t i;
 
 	for (i = 0; i < conf->pinmux->count; i++)
 		mtk_set_pin_mode(conf->pinmux->pins[i], conf->pinmux->mux);
 
-	mtk_mmc_init(conf->base, 0, conf->dev_comp, conf->src_clk, conf->type,
-		     conf->bus_width);
+	ret = mtk_mmc_init(conf->base, 0, conf->dev_comp, conf->src_clk, conf->type,
+			   conf->bus_width);
+	if (ret)
+		return ret;
 
 	if (num_sectors)
 		*num_sectors = mtk_mmc_block_count();

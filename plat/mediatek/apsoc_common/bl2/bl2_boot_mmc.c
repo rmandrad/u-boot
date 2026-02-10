@@ -112,21 +112,31 @@ static size_t mmc_uda_read_blocks(int lba, uintptr_t buf, size_t size)
 static int mtk_mmc_gpt_init(void)
 {
 	int ret;
+	int attempt;
 
 	static bool gpt_ready = false;
 
 	if (gpt_ready)
 		return 0;
 
-	ret = gpt_partition_init();
-	if (ret != 0) {
-		ERROR("Failed to initialize GPT partitions\n");
-		return -ENOENT;
+	for (attempt = 0; attempt < 3; attempt++) {
+		ret = gpt_partition_init();
+		if (ret == 0) {
+			gpt_ready = true;
+			return 0;
+		}
+
+		WARN("GPT init attempt %d failed (%d)\n", attempt + 1, ret);
+
+		ret = mtk_plat_mmc_setup(&num_sectors);
+		if (ret) {
+			ERROR("Failed to reinitialize MMC (%d)\n", ret);
+			return ret;
+		}
 	}
 
-	gpt_ready = true;
-
-	return 0;
+	ERROR("Failed to initialize GPT partitions (%d)\n", ret);
+	return ret;
 }
 #endif
 

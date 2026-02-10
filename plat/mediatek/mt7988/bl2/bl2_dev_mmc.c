@@ -148,6 +148,7 @@ static void mmc_gpio_setup(void)
 int mtk_plat_mmc_setup(uint32_t *num_sectors)
 {
 	const struct mt7988_msdc_conf *conf = &mt7988_msdc[MSDC_INDEX];
+	int ret;
 	uint32_t i;
 
 	for (i = 0; i < conf->pinmux->count; i++) {
@@ -157,8 +158,10 @@ int mtk_plat_mmc_setup(uint32_t *num_sectors)
 
 	mmc_gpio_setup();
 
-	mtk_mmc_init(conf->base, conf->top_base, conf->dev_comp, conf->src_clk,
-		     conf->type, conf->bus_width);
+	ret = mtk_mmc_init(conf->base, conf->top_base, conf->dev_comp, conf->src_clk,
+			   conf->type, conf->bus_width);
+	if (ret)
+		return ret;
 
 	if (num_sectors)
 		*num_sectors = mtk_mmc_block_count();
