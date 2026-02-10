@@ -113,6 +113,10 @@
 	status = "okay";
 };
 
+&psci {
+	status = "okay";
+}
+
 &pio {
 	/* 1L0 0=key-b (CN15), 1=key-m (CN13) */
 	/*pcie-2-hog {
