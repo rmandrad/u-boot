@@ -26,40 +26,10 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - board: bpi-r2
-            boots: [sdmmc]
-            atf: false
-            ram8g: false
-
-          - board: bpi-r64
-            boots: [sdmmc, emmc]
-            atf: true
-            ram8g: false
-
-          - board: bpi-r2pro
-            boots: [sdmmc]
-            atf: false
-            ram8g: false
-
-          - board: bpi-r3
-            boots: [sdmmc, emmc, spi-nand, spi-nor, ram]
-            atf: true
-            ram8g: false
-
-          - board: bpi-r3mini
-            boots: [emmc, spi-nand, ram]
-            atf: true
-            ram8g: false
-
           - board: bpi-r4
             boots: [sdmmc, emmc, spi-nand, ram]
             atf: true
             ram8g: true
-
-          - board: bpi-r4lite
-            boots: [sdmmc, emmc, spi-nand, ram]
-            atf: true
-            ram8g: false
 
           - board: bpi-r4pro
             boots: [sdmmc, emmc, spi-nand, ram]
